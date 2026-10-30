@@ -148,4 +148,38 @@ html[lang="en"] .controls p { line-height: 1.7; }
   html[lang="en"] .action-row .fold-button { font-size: 12px; line-height: 1.2; }
   html[lang="en"] .table-button { font-size: 12px; }
 }
+.floor-surface {
+  position: absolute; inset: 0; z-index: 0; opacity: 0; pointer-events: none;
+  background: #e4e1dc url('./granite-tile.png') center / cover;
+  transition: opacity 900ms ease;
+}
+.stage.is-floor-view .floor-surface { opacity: 1; }
+.stage.is-floor-view .device-scene { transform: translateY(18px) scale(.50) rotate(5deg); transition-duration: 900ms; transition-timing-function: cubic-bezier(.3,.02,.85,.6); }
+.stage.is-floor-view .device-scene::before { opacity: 1; box-shadow: 3px 5px 0 #35312b44, 5px 8px 8px #35312b44; }
+.stage.is-floor-view .ground-shadow { opacity: 0; }
+.stage.is-floor-view .stage-bottom { color: #55564d; }
+.stage.is-floor-view .corner { border-color: #88897f; }
+.stage.is-lifting-floor .device-scene, .stage.is-lifting-floor .floor-surface, .stage.is-lifting-floor .device-scene::before { transition-duration: 800ms; }
+.stage.is-floor-view .result { padding: 8px; }
+.stage.is-floor-view .result h2 { font-size: clamp(17px,2.4vw,26px); margin: 8px 0; line-height: 1.4; }
+.stage.is-floor-view .final-score { font-size: 13px; }
+.stage.is-floor-view .replay-button { font-size: 16px; margin-top: 10px; }
+.drop-button { background: #e0e2de; border-color: #69716c; color: #424d48; box-shadow: 4px 4px #a9b0a8; }
+.drop-button:hover:not(:disabled) { background: #cdd4cb; }
+.drop-button:active:not(:disabled) { box-shadow: 1px 1px #a9b0a8; }
+#drop-icon { font: 23px Consolas, monospace; }
+#drop-reward { min-width: 23px; font: 12px Consolas, monospace; color: #748477; }
+.action-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); max-width: 680px; margin: auto; gap: 12px; }
+.action-row > button { min-width: 0; width: 100%; justify-content: center; gap: 12px; padding: 0 12px; }
+.settings-toggle { gap: 10px; flex-wrap: wrap; }
+@media(max-width:600px) {
+  .action-row { gap: 8px; }
+  .action-row > button { padding: 0 8px; gap: 4px; height: 56px; font-size: 12px; }
+  .action-row .fold-symbol, .action-row .button-arrow, #table-icon, #drop-icon { display: none; }
+  html[lang="en"] .action-row > button { font-size: 11px; }
+  #table-reward, #drop-reward { font-size: 10px; min-width: 0; }
+  .stage.is-floor-view .device-scene { transform: translateY(12px) scale(.64) rotate(5deg); }
+  .stage.is-floor-view .result h2, html[lang="en"] .stage.is-floor-view .result h2 { font-size: 17px; }
+  .stage.is-floor-view .final-score strong { font-size: 32px; }
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

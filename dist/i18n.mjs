@@ -17,6 +17,7 @@ export const messages = {
     resultLabel: '本次得分', settings: '测试设置', failureChance: '故障概率',
     putDown: '放在桌子上', pickUp: '拿起来', foldChanceShort: '开合', tableChanceShort: '放桌',
     tableProbabilityLabel: '放桌时的故障概率', tableProbabilityAria: '放桌故障概率百分比',
+    drop: '跌落', dropProbabilityLabel: '跌落时的故障概率', dropProbabilityAria: '跌落故障概率百分比',
     probabilityLabel: '展开时的故障概率', probabilityAria: '故障概率百分比',
     apply: '应用并重新开始', languageAria: '界面语言',
     physicalFoldLabel: '真机开合控制（实验）',
@@ -34,17 +35,20 @@ export const messages = {
       folded: '请先展开手机，再半折一次。',
       armed: '已检测到半折，请展开手机完成一轮。'
     },
-    instruction: '开合成功 +1 分，放桌成功 +2 分。Enter 快捷开合。',
+    instruction: '开合 +1 分 · 放桌 +2 分 · 跌落 +20 分。Enter 快捷开合。',
+    floorInstruction: '跌落后完好，+20 分。拿起来后可继续选择玩法。',
+    droppingInstruction: '正在跌落…',
     tableInstruction: '安全放下，+2 分。拿起来后可继续选择玩法。',
     placingInstruction: '正在放到桌面上…', liftingInstruction: '正在拿起手机…',
     gameoverInstruction: '点击屏幕内的「重玩」再试一次。',
-    settingsNote: '调整后下一局生效。放桌故障概率最低2%。',
-    draftNote: (fold,table) => `下一局：开合 ${fold}%，放桌 ${table}%。放桌最低2%。`,
-    readyAnnouncement: score => `当前 ${score} 分，可以开合或放到桌面。`,
+    settingsNote: '下一局生效。放桌最低2%，跌落最低10%。',
+    draftNote: (fold,table,drop) => `下一局：开合 ${fold}%，放桌 ${table}%，跌落 ${drop}%。`,
+    readyAnnouncement: score => `当前 ${score} 分，可以开合、放桌或跌落。`,
     tableAnnouncement: score => `安全放到桌面，加2分。当前 ${score} 分，请先拿起来。`,
+    floorAnnouncement: score => `跌落后屏幕完好，加20分。当前 ${score} 分，请先拿起来。`,
     failedAnnouncement: score => `啊哦，屏幕坏了，需要花￥7998才能修好…… 本次得分 ${score} 分。`,
     device: phase => `像素风折叠屏手机，${phase}`,
-    phases: { ready:'展开就绪', folding:'正在折叠', closed:'已合拢', unfolding:'正在展开', placing:'正在放下', onTable:'已放在桌面', lifting:'正在拿起', damaged:'屏幕故障', gameover:'游戏结束' }
+    phases: { ready:'展开就绪', folding:'正在折叠', closed:'已合拢', unfolding:'正在展开', placing:'正在放下', onTable:'已放在桌面', lifting:'正在拿起', dropping:'正在跌落', onFloor:'已落在地面', liftingFloor:'正在拿起', damaged:'屏幕故障', gameover:'游戏结束' }
   },
   en: {
     title: 'One More Fold', subtitle: 'One more fold. What could go wrong?',
@@ -53,6 +57,7 @@ export const messages = {
     resultLabel: 'Final score', settings: 'Test settings', failureChance: 'failure chance',
     putDown: 'Put on table', pickUp: 'Pick up', foldChanceShort: 'Fold', tableChanceShort: 'Table',
     tableProbabilityLabel: 'Failure chance when placing on table', tableProbabilityAria: 'Table failure chance in percent',
+    drop: 'Drop', dropProbabilityLabel: 'Failure chance when dropped', dropProbabilityAria: 'Drop failure chance in percent',
     probabilityLabel: 'Failure chance when unfolding', probabilityAria: 'Failure chance in percent',
     apply: 'Apply & restart', languageAria: 'Interface language',
     physicalFoldLabel: 'Physical fold control (experimental)',
@@ -70,16 +75,19 @@ export const messages = {
       folded: 'Unfold the phone first, then half-fold it again.',
       armed: 'Half-fold detected. Unfold the phone to complete a cycle.'
     },
-    instruction: 'A successful fold earns 1 point; a safe placement earns 2. Enter to fold.',
+    instruction: 'Fold +1 · Table +2 · Drop +20. Press Enter to fold.',
+    floorInstruction: 'Survived the drop: +20 points. Pick it up to choose an action.',
+    droppingInstruction: 'Dropping the phone…',
     tableInstruction: 'Safely placed: +2 points. Pick it up to choose either action again.',
     placingInstruction: 'Placing the phone on the table…', liftingInstruction: 'Picking up the phone…',
     gameoverInstruction: 'Select “Play again” on the screen to try again.',
-    settingsNote: 'Changes apply next game. Table failure chance has a 2% minimum.',
-    draftNote: (fold,table) => `Next game: fold ${fold}%, table ${table}%. Table minimum: 2%.`,
-    readyAnnouncement: score => `${score} points. Ready to fold or place on the table.`,
+    settingsNote: 'Applies next game. Minimum risk: table 2%, drop 10%.',
+    draftNote: (fold,table,drop) => `Next game: fold ${fold}%, table ${table}%, drop ${drop}%.`,
+    readyAnnouncement: score => `${score} points. Ready to fold, place on the table or drop.`,
     tableAnnouncement: score => `Safely placed, 2 points earned. Total: ${score}. Pick it up to continue.`,
+    floorAnnouncement: score => `Survived the drop, 20 points earned. Total: ${score}. Pick it up to continue.`,
     failedAnnouncement: score => `Oops, the screen broke. It will cost $999 to repair. Final score: ${score} points.`,
     device: phase => `Pixel foldable phone, ${phase}`,
-    phases: { ready:'Ready', folding:'Folding', closed:'Folded', unfolding:'Unfolding', placing:'Putting down', onTable:'On the table', lifting:'Picking up', damaged:'Screen failure', gameover:'Game over' }
+    phases: { ready:'Ready', folding:'Folding', closed:'Folded', unfolding:'Unfolding', placing:'Putting down', onTable:'On the table', lifting:'Picking up', dropping:'Dropping', onFloor:'On the floor', liftingFloor:'Picking up', damaged:'Screen failure', gameover:'Game over' }
   }
 };

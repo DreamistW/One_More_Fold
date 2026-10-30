@@ -105,3 +105,12 @@ test('physical folds on the table are discarded and resume only after pickup',as
   await game.pickUp();f.change('folded');f.change('continuous');await Promise.all(runs);
   assert.equal(runs.length,1);assert.equal(game.score,3);
 });
+
+test('physical folds on the floor are discarded and resume only after pickup',async()=>{
+  const f=fixture(),runs=[];
+  const game=new FoldGame({probability:0,random:()=>.5,wait:async()=>{}});
+  f.control.canPlay=()=>game.phase==='ready';f.control.onCycle=()=>runs.push(game.cycle());
+  await game.drop();f.change('folded');f.change('continuous');assert.equal(runs.length,0);assert.equal(game.score,20);
+  await game.pickUp();f.change('folded');f.change('continuous');await Promise.all(runs);
+  assert.equal(runs.length,1);assert.equal(game.score,21);
+});
