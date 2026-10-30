@@ -1,8 +1,12 @@
 // All scenery is drawn at native low resolution. CSS scales with nearest neighbours.
+import { getClockDisplay } from './screen-clock.mjs';
 const W = 336, H = 232;
 const digitMap = {
   '0':['111','101','101','101','111'], '1':['010','110','010','010','111'],
+  '2':['111','001','111','100','111'], '3':['111','001','111','001','111'],
   '4':['101','101','111','001','001'], '9':['111','101','111','001','111'],
+  '5':['111','100','111','001','111'], '6':['111','100','111','101','111'],
+  '7':['111','001','010','010','010'], '8':['111','101','111','101','111'],
   ':':['0','1','0','1','0']
 };
 
@@ -22,7 +26,7 @@ function random(seed = 42) {
   return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 }
 
-function scenery(width, cover = false, language = 'zh') {
+function scenery(width, cover, clock) {
   const canvas = document.createElement('canvas');
   canvas.width = width; canvas.height = H;
   const c = canvas.getContext('2d');
@@ -61,8 +65,8 @@ function scenery(width, cover = false, language = 'zh') {
       if(lineY>duneY(x)+5 && (x+y)%7!==0) c.fillRect(x,lineY,1,1);
     }
   }
-  c.fillStyle='#f4f5e6'; c.font='7px sans-serif'; c.textAlign='center'; c.fillText(language === 'zh' ? '4月1日 周三' : 'WED, APR 01',width/2,21);
-  pixelText(c, cover?'9:41':'09:41',width/2,31,cover?5:6,'#f7fae9');
+  c.fillStyle='#f4f5e6'; c.font='7px sans-serif'; c.textAlign='center'; c.fillText(clock.date,width/2,21);
+  pixelText(c, clock.time,width/2,31,cover?5:6,'#f7fae9');
   // Pixel signal and battery glyphs.
   c.fillStyle='#edf5e7'; c.fillRect(width-19,12,9,1); c.fillRect(width-17,14,5,1); c.fillRect(width-15,16,1,1);
   c.fillStyle='#eee9d1'; c.fillRect(width/2-25,H-9,50,2);
@@ -74,8 +78,8 @@ function scenery(width, cover = false, language = 'zh') {
   return canvas;
 }
 
-export function createPhoneTextures(language = 'zh') {
-  const wallpaper = scenery(W, false, language);
+export function createPhoneTextures(language = 'zh', clock = getClockDisplay(new Date(),language)) {
+  const wallpaper = scenery(W, false, clock);
   const makePhone = (width, image, cover) => {
     const canvas = document.createElement('canvas');
     canvas.width = width; canvas.height = 240;
@@ -90,5 +94,5 @@ export function createPhoneTextures(language = 'zh') {
     if(cover) { c.fillStyle='#131c21';c.fillRect(width-22,15,9,9);c.fillStyle='#213040';c.fillRect(width-19,18,3,3); }
     return canvas;
   };
-  return { front:makePhone(344,wallpaper,false), cover:makePhone(172,scenery(168,true,language),true) };
+  return { front:makePhone(344,wallpaper,false), cover:makePhone(172,scenery(168,true,clock),true) };
 }

@@ -2,6 +2,7 @@ import { FoldGame, DEFAULT_PROBABILITY, DEFAULT_TABLE_PROBABILITY, DURATIONS } f
 import { PhoneRenderer } from './phone-renderer.mjs';
 import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.mjs';
 import { PhysicalFoldControl } from './device-posture.mjs';
+import { watchSystemClock } from './screen-clock.mjs';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -18,6 +19,8 @@ if (!['zh','en'].includes(preferredLanguage)) preferredLanguage = undefined;
 const browserLanguages = () => navigator.languages?.length ? navigator.languages : [navigator.language];
 let language = chooseLanguage(preferredLanguage, browserLanguages());
 const phone = new PhoneRenderer($('phone-canvas'),language);
+const stopClock = watchSystemClock(date=>phone.updateClock(date));
+window.addEventListener('pagehide',event=>{ if(!event.persisted) stopClock(); });
 
 function renderSettingsNote() {
   const t = messages[language];
@@ -60,6 +63,7 @@ function render({ phase, score, probability, tableProbability, onTable }) {
   const folded = phase === 'folding' || phase === 'closed';
   const moving = folded || phase === 'unfolding';
   const broken = phase === 'damaged' || phase === 'gameover';
+  if(broken) phone.pauseClock();
   if(phase === 'folding') phone.moveTo(1,reducedMotion.matches?0:DURATIONS.fold);
   if(phase === 'unfolding') phone.moveTo(0,reducedMotion.matches?0:DURATIONS.unfold);
   $('stage').classList.toggle('is-folded',folded);

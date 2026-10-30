@@ -1,5 +1,6 @@
 import { createPhoneTextures } from './pixel-art.mjs';
 import { createBlurredInnerScreen, focusBlurStrength, innerScreenMask } from './screen-focus.mjs';
+import { ScreenClock } from './screen-clock.mjs';
 
 export const PHONE_WIDTH = 344, PHONE_HEIGHT = 240;
 export const RENDER_PADDING = Object.freeze({ x:32, y:40 });
@@ -83,15 +84,32 @@ export class PhoneRenderer {
     this.target = 0;
     this.frame = 0;
     this.finished = Promise.resolve();
+    this.screenClock = new ScreenClock();
     this.setLanguage(language);
   }
 
   setLanguage(language) {
-    this.textures = createPhoneTextures(language);
+    this.language = language;
+    this.updateClock(new Date());
+  }
+
+  updateClock(date = new Date()) {
+    const clock = this.screenClock.read(this.language,date);
+    if(clock.key === this.clockDisplay?.key) return false;
+    this.textures = createPhoneTextures(this.language,clock);
     this.frontPixels = this.textures.front.getContext('2d').getImageData(0,0,PHONE_WIDTH,PHONE_HEIGHT);
     this.blurredFrontPixels = createBlurredInnerScreen(this.frontPixels);
     this.coverPixels = this.textures.cover.getContext('2d').getImageData(0,0,PHONE_WIDTH/2,PHONE_HEIGHT);
+    this.clockDisplay = clock;
+    this.canvas.setAttribute('data-screen-time',clock.time);
+    this.canvas.setAttribute('data-screen-date',clock.date);
     this.draw();
+    return true;
+  }
+
+  pauseClock() {
+    this.screenClock.pause();
+    this.updateClock();
   }
 
   draw() {
@@ -153,6 +171,7 @@ export class PhoneRenderer {
 
   reset() {
     this.cancel(); this.amount=0;this.target=0;
-    this.finished=Promise.resolve();this.draw();
+    this.finished=Promise.resolve();this.screenClock.resume();
+    if(!this.updateClock()) this.draw();
   }
 }
