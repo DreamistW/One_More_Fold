@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeece3">
+  <title>开合之间</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%232a302e' d='M2 5h28v22H2z'/%3E%3Cpath fill='%23e89655' d='M5 8h10v16H5zm12 0h10v16H17z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="cabinet">
+    <div class="language-bar"><div class="language-switch" id="language-switch" role="group" aria-label="界面语言"><button type="button" id="language-zh" lang="zh-CN" aria-pressed="true">中文</button><button type="button" id="language-en" lang="en" aria-pressed="false">EN</button></div></div>
+    <section class="game" aria-labelledby="game-title">
+      <div class="intro">
+        <h1 id="game-title"><span data-i18n="title">开合之间</span><span class="title-period">.</span></h1>
+        <p data-i18n="subtitle">再折一次，应该也没事吧。</p>
+      </div>
+
+      <div class="instrument-bar">
+        <div class="score-readout"><span class="label" data-i18n="scoreLabel">成功开合</span><strong id="score">000</strong><span class="unit" data-i18n="scoreUnit">次</span></div>
+        <div class="health"><span id="health-light" class="health-light"></span><span id="health-label">屏幕状态良好</span></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <span class="corner top-left" aria-hidden="true"></span><span class="corner top-right" aria-hidden="true"></span>
+        <div class="device-scene" role="group" aria-label="像素风折叠屏手机，当前展开" id="device-description">
+          <div class="device-position" id="device-position">
+            <div class="device" id="device">
+              <canvas id="phone-canvas" width="408" height="320" aria-hidden="true"></canvas>
+              <div class="screen-ui" id="screen-ui">
+                <div class="result" id="result" hidden>
+                  <h2><span data-i18n="resultFirst">啊哦，屏幕坏了，</span><br><span data-i18n="resultSecond">需要花￥7998才能修好……</span></h2>
+                  <div class="final-score"><span data-i18n="resultLabel">本次成功开合</span><strong id="final-score">0</strong><span data-i18n="scoreUnit">次</span></div>
+                  <button class="replay-button" id="replay" type="button"><span aria-hidden="true">↻ &nbsp;</span><span data-i18n="replay">重玩</span></button>
+                </div>
+                <div class="damage" id="damage" hidden aria-hidden="true"><span class="black-line"></span><span class="vertical-bleed"></span><span class="green-line"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ground-shadow" aria-hidden="true"></div>
+        <div class="stage-bottom"><span id="phase-label">展开就绪</span></div>
+        <span class="corner bottom-left" aria-hidden="true"></span><span class="corner bottom-right" aria-hidden="true"></span>
+      </div>
+
+      <div class="controls">
+        <button class="fold-button" id="fold" type="button" aria-keyshortcuts="Enter"><span class="fold-symbol" aria-hidden="true">↔</span><span data-i18n="fold">开合</span><span class="button-arrow" aria-hidden="true">↵</span></button>
+        <p id="instruction">点击或按 Enter，折叠再展开。每成功一轮，得 1 分。</p>
+        <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+
+      <div class="settings" id="settings">
+        <button class="settings-toggle" id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel"><span><span class="settings-icon" aria-hidden="true">⚙</span> <span data-i18n="settings">测试设置</span></span><span class="settings-summary"><span id="active-probability">1</span>% <span data-i18n="failureChance">故障概率</span> <span class="chevron" aria-hidden="true">+</span></span></button>
+        <div class="settings-panel" id="settings-panel" aria-hidden="true" inert><div class="settings-body">
+        <form id="settings-form">
+          <div class="settings-heading"><label for="probability" data-i18n="probabilityLabel">展开时的故障概率</label></div>
+          <div class="probability-controls"><input id="probability-range" type="range" min="0" max="100" step="0.1" value="1" aria-label="故障概率百分比"><div class="number-field"><input id="probability" type="number" min="0" max="100" step="0.1" required value="1"><span>%</span></div></div>
+          <div class="settings-bottom"><p id="settings-note">调整后下一局生效。0% 永不损坏，100% 必定损坏。</p><button type="submit"><span data-i18n="apply">应用并重新开始</span> <span aria-hidden="true">↗</span></button></div>
+        </form>
+        </div></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
