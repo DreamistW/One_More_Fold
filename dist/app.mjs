@@ -3,6 +3,7 @@ import { PhoneRenderer } from './phone-renderer.mjs';
 import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.mjs';
 import { PhysicalFoldControl } from './device-posture.mjs';
 import { watchSystemClock } from './screen-clock.mjs';
+import { watchFoldableDevice } from './foldable-device.mjs';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -12,6 +13,7 @@ let draftEdited = false;
 let previousPhase;
 let currentSnapshot;
 let physicalControl;
+let foldableDevice = false;
 let physicalState={availability:'checking',enabled:false};
 let preferredLanguage;
 try { preferredLanguage = localStorage.getItem(LANGUAGE_KEY); } catch { /* Private mode may disable storage. */ }
@@ -30,6 +32,8 @@ function renderSettingsNote() {
 }
 
 function renderPhysicalState() {
+  $('posture-status').hidden = !foldableDevice;
+  $('physical-controls').hidden = !foldableDevice;
   const s=physicalState;
   let state=s.availability;
   if(state === 'available') state=!s.enabled?'disabled':s.hidden?'paused':s.armed?'armed':s.posture==='folded'?'folded':'ready';
@@ -107,6 +111,10 @@ const game = new FoldGame({onChange:render,wait:ms => {
 }});
 physicalControl=new PhysicalFoldControl({canPlay:()=>game.phase === 'ready',
   onCycle:()=>fold(),onState:state=>{physicalState=state;renderPhysicalState();}});
+const stopFoldableDetection=watchFoldableDevice(detected=>{
+  foldableDevice=detected;renderPhysicalState();
+});
+window.addEventListener('pagehide',event=>{if(!event.persisted) stopFoldableDetection();});
 $('physical-fold').addEventListener('change',()=>physicalControl.setEnabled($('physical-fold').checked));
 
 for (const code of ['zh','en']) $('language-'+code).addEventListener('click',() => {

@@ -51,7 +51,7 @@
         <button class="table-button" id="table-action" type="button"><span id="table-icon" aria-hidden="true">↓</span><span id="table-label">放在桌子上</span><span id="table-reward" aria-hidden="true">+2</span></button>
         </div>
         <p id="instruction">开合成功 +1 分，放桌成功 +2 分。Enter 快捷开合。</p>
-        <p class="posture-status" id="posture-status" role="status" aria-live="polite"></p>
+        <p class="posture-status" id="posture-status" role="status" aria-live="polite" hidden></p>
         <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
       </div>
 
@@ -65,7 +65,7 @@
           <div class="probability-controls"><input id="table-probability-range" type="range" min="2" max="100" step="0.1" value="2" aria-label="放桌故障概率百分比"><div class="number-field"><input id="table-probability" type="number" min="2" max="100" step="0.1" required value="2"><span>%</span></div></div>
           <div class="settings-bottom"><p id="settings-note">调整后下一局生效。放桌故障概率最低2%。</p><button type="submit"><span data-i18n="apply">应用并重新开始</span> <span aria-hidden="true">↗</span></button></div>
         </form>
-        <div class="physical-controls">
+        <div class="physical-controls" id="physical-controls" hidden>
           <label class="physical-toggle"><input id="physical-fold" type="checkbox" disabled><span data-i18n="physicalFoldLabel">真机开合控制（实验）</span></label>
           <p data-i18n="physicalFoldHelp">保持内屏页面可见，半折后再展开触发一轮开合；完全合拢可能使检测暂停。</p>
         </div>
