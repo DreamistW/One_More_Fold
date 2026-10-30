@@ -67,7 +67,7 @@ test('table failure waits for placement then shows the shared damage and game-ov
   await c.advance();assert.equal(c.game.phase,'damaged');assert.equal(c.game.score,0);assert.equal(c.draws,1);
   assert.equal(c.pending[0].ms,450);assert.equal(await c.game.pickUp(),false);
   await c.advance();await action;assert.equal(c.game.phase,'gameover');assert.equal(c.game.onTable,true);
-  c.game.reset(0,.03);assert.deepEqual(c.game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.03,onTable:false,dropProbability:.1,onFloor:false});
+  c.game.reset(0,.03);assert.deepEqual(c.game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.03,onTable:false,dropProbability:.2,onFloor:false});
 });
 
 test('restart cancels stale table placement, lifting and failure waits',async()=>{

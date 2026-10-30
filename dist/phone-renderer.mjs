@@ -69,7 +69,7 @@ export function paintFoldPixels(output, width, height, front, cover, amount, blu
 // One output bitmap is used for every frame. The final frame uses the same source
 // and exact coordinates as the initial frame: no CSS layer or texture swap.
 export class PhoneRenderer {
-  constructor(canvas, language) {
+  constructor(canvas, language, theme = 'light') {
     this.canvas = canvas;
     canvas.width = PHONE_WIDTH + RENDER_PADDING.x*2;
     canvas.height = PHONE_HEIGHT + RENDER_PADDING.y*2;
@@ -85,6 +85,7 @@ export class PhoneRenderer {
     this.frame = 0;
     this.finished = Promise.resolve();
     this.screenClock = new ScreenClock();
+    this.theme = theme === 'dark' ? 'dark' : 'light';
     this.setLanguage(language);
   }
 
@@ -93,14 +94,22 @@ export class PhoneRenderer {
     this.updateClock(new Date());
   }
 
+  setTheme(theme) {
+    this.theme = theme === 'dark' ? 'dark' : 'light';
+    this.updateClock();
+  }
+
   updateClock(date = new Date()) {
     const clock = this.screenClock.read(this.language,date);
-    if(clock.key === this.clockDisplay?.key) return false;
-    this.textures = createPhoneTextures(this.language,clock);
+    const textureKey = `${clock.key}:${this.theme}`;
+    if(textureKey === this.textureKey) return false;
+    this.textures = createPhoneTextures(this.language,clock,this.theme);
     this.frontPixels = this.textures.front.getContext('2d').getImageData(0,0,PHONE_WIDTH,PHONE_HEIGHT);
     this.blurredFrontPixels = createBlurredInnerScreen(this.frontPixels);
     this.coverPixels = this.textures.cover.getContext('2d').getImageData(0,0,PHONE_WIDTH/2,PHONE_HEIGHT);
     this.clockDisplay = clock;
+    this.textureKey = textureKey;
+    this.canvas.setAttribute('data-screen-theme',this.theme);
     this.canvas.setAttribute('data-screen-time',clock.time);
     this.canvas.setAttribute('data-screen-date',clock.date);
     this.draw();

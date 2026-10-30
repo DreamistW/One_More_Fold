@@ -20,6 +20,7 @@ export const messages = {
     drop: '跌落', dropProbabilityLabel: '跌落时的故障概率', dropProbabilityAria: '跌落故障概率百分比',
     probabilityLabel: '展开时的故障概率', probabilityAria: '故障概率百分比',
     apply: '应用并重新开始', languageAria: '界面语言',
+    themeDark: '深色', themeLight: '浅色', themeSystem: '跟随系统', themeAria: '显示模式',
     physicalFoldLabel: '真机开合控制（实验）',
     physicalFoldHelp: '保持内屏页面可见，半折后再展开触发一轮开合；完全合拢可能使检测暂停。',
     postureStates: {
@@ -41,7 +42,7 @@ export const messages = {
     tableInstruction: '安全放下，+2 分。拿起来后可继续选择玩法。',
     placingInstruction: '正在放到桌面上…', liftingInstruction: '正在拿起手机…',
     gameoverInstruction: '点击屏幕内的「重玩」再试一次。',
-    settingsNote: '下一局生效。放桌最低2%，跌落最低10%。',
+    settingsNote: '下一局生效。放桌最低2%，跌落最低20%。',
     draftNote: (fold,table,drop) => `下一局：开合 ${fold}%，放桌 ${table}%，跌落 ${drop}%。`,
     readyAnnouncement: score => `当前 ${score} 分，可以开合、放桌或跌落。`,
     tableAnnouncement: score => `安全放到桌面，加2分。当前 ${score} 分，请先拿起来。`,
@@ -60,6 +61,7 @@ export const messages = {
     drop: 'Drop', dropProbabilityLabel: 'Failure chance when dropped', dropProbabilityAria: 'Drop failure chance in percent',
     probabilityLabel: 'Failure chance when unfolding', probabilityAria: 'Failure chance in percent',
     apply: 'Apply & restart', languageAria: 'Interface language',
+    themeDark: 'Dark', themeLight: 'Light', themeSystem: 'System', themeAria: 'Appearance',
     physicalFoldLabel: 'Physical fold control (experimental)',
     physicalFoldHelp: 'Keep this page visible on the inner display. Half-fold, then unfold to trigger one game cycle. Closing fully may pause detection.',
     postureStates: {
@@ -81,7 +83,7 @@ export const messages = {
     tableInstruction: 'Safely placed: +2 points. Pick it up to choose either action again.',
     placingInstruction: 'Placing the phone on the table…', liftingInstruction: 'Picking up the phone…',
     gameoverInstruction: 'Select “Play again” on the screen to try again.',
-    settingsNote: 'Applies next game. Minimum risk: table 2%, drop 10%.',
+    settingsNote: 'Applies next game. Minimum risk: table 2%, drop 20%.',
     draftNote: (fold,table,drop) => `Next game: fold ${fold}%, table ${table}%, drop ${drop}%.`,
     readyAnnouncement: score => `${score} points. Ready to fold, place on the table or drop.`,
     tableAnnouncement: score => `Safely placed, 2 points earned. Total: ${score}. Pick it up to continue.`,

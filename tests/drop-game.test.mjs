@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {FoldGame,DEFAULT_DROP_PROBABILITY,MIN_DROP_PROBABILITY} from '../dist/game.mjs';
 
 const immediate=async()=>{};
-function controlled({dropProbability=.1,draw=.5}={}) {
+function controlled({dropProbability=.2,draw=.5}={}) {
   const pending=[];let draws=0;
   const game=new FoldGame({dropProbability,random:()=>{draws++;return draw;},
     wait:ms=>new Promise(resolve=>pending.push({ms,resolve}))});
@@ -11,11 +11,11 @@ function controlled({dropProbability=.1,draw=.5}={}) {
   return {game,pending,advance,get draws(){return draws;}};
 }
 
-test('drop risk defaults to 10%, enforces its minimum, and invalid reset is atomic',async()=>{
-  assert.equal(DEFAULT_DROP_PROBABILITY,.1);assert.equal(MIN_DROP_PROBABILITY,.1);
-  for(const dropProbability of [0,.02,.099999,-1,NaN,Infinity,1.001])assert.throws(()=>new FoldGame({dropProbability}),RangeError);
+test('drop risk defaults to 20%, enforces its minimum, and invalid reset is atomic',async()=>{
+  assert.equal(DEFAULT_DROP_PROBABILITY,.2);assert.equal(MIN_DROP_PROBABILITY,.2);
+  for(const dropProbability of [0,.02,.1,.199999,-1,NaN,Infinity,1.001])assert.throws(()=>new FoldGame({dropProbability}),RangeError);
   const game=new FoldGame({wait:immediate,random:()=>.5});await game.putDown();const before=game.snapshot;
-  assert.throws(()=>game.reset(0,.02,.09),RangeError);assert.deepEqual(game.snapshot,before);
+  assert.throws(()=>game.reset(0,.02,.19),RangeError);assert.deepEqual(game.snapshot,before);
 });
 
 test('a survived drop adds twenty exactly once; pickup is free and restores all actions',async()=>{
@@ -49,8 +49,8 @@ test('fold, table placement, table rest and table pickup all block dropping',asy
 });
 
 test('drop threshold is strict and independent of the other two probabilities',async()=>{
-  for(const [draw,failed] of [[0,true],[.099999,true],[.1,false],[.9,false]]){
-    const game=new FoldGame({probability:1,tableProbability:1,dropProbability:.1,random:()=>draw,wait:immediate});
+  for(const [draw,failed] of [[0,true],[.199999,true],[.2,false],[.9,false]]){
+    const game=new FoldGame({probability:1,tableProbability:1,dropProbability:.2,random:()=>draw,wait:immediate});
     await game.drop();assert.equal(game.phase,failed?'gameover':'onFloor');assert.equal(game.score,failed?0:20);
   }
   const game=new FoldGame({probability:0,tableProbability:.02,dropProbability:1,random:()=>.5,wait:immediate});
@@ -69,9 +69,9 @@ test('failed drop uses damage and game-over states without awarding points',asyn
 
 test('restart cancels pending fall, floor pickup and damage completion',async()=>{
   for(const phase of ['dropping','liftingFloor','damaged']){
-    const c=controlled({dropProbability:phase==='damaged'?1:.1});let action=c.game.drop();
+    const c=controlled({dropProbability:phase==='damaged'?1:.2});let action=c.game.drop();
     if(phase!=='dropping'){await c.advance();if(phase==='liftingFloor'){await action;action=c.game.pickUp();}}
-    assert.equal(c.game.phase,phase);const draws=c.draws;c.game.reset(0,.02,.1);
+    assert.equal(c.game.phase,phase);const draws=c.draws;c.game.reset(0,.02,.2);
     await c.advance();assert.equal(await action,false);assert.equal(c.game.phase,'ready');assert.equal(c.game.score,0);
     assert.equal(c.game.onFloor,false);assert.equal(c.game.onTable,false);assert.equal(c.draws,draws);
   }

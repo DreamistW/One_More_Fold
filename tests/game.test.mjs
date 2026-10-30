@@ -45,7 +45,7 @@ test('failure keeps previous successful score, replay resets and applies new pro
   const game=new FoldGame({wait:immediate,random:()=>draws.shift()});
   await game.cycle();await game.cycle();await game.cycle();
   assert.equal(game.phase,'gameover');assert.equal(game.score,2);
-  game.reset(0);assert.deepEqual(game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.02,onTable:false,dropProbability:.1,onFloor:false});
+  game.reset(0);assert.deepEqual(game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.02,onTable:false,dropProbability:.2,onFloor:false});
   await game.cycle();assert.equal(game.score,1);
 });
 
@@ -55,7 +55,7 @@ test('reset during any asynchronous phase invalidates old cycle without stale up
     for(let i=0;i<phaseIndex;i++)await c.advance();
     c.game.reset(0);const drawCount=c.draws;
     await c.advance();assert.equal(await cycle,false);
-    assert.deepEqual(c.game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.02,onTable:false,dropProbability:.1,onFloor:false});assert.equal(c.draws,drawCount);
+    assert.deepEqual(c.game.snapshot,{phase:'ready',score:0,probability:0,tableProbability:.02,onTable:false,dropProbability:.2,onFloor:false});assert.equal(c.draws,drawCount);
   }
 });
 

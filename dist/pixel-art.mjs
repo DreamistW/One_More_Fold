@@ -26,12 +26,15 @@ function random(seed = 42) {
   return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 }
 
-function scenery(width, cover, clock) {
+function scenery(width, cover, clock, theme) {
   const canvas = document.createElement('canvas');
   canvas.width = width; canvas.height = H;
   const c = canvas.getContext('2d');
   const rand = random(cover ? 57 : 42);
-  const palette = ['#a4bac1','#aec2c5','#bccacc','#c9cfc9','#d4d4c8','#ded8c6','#e4dbc5','#e8ddc4'];
+  const dark = theme === 'dark';
+  const palette = dark
+    ? ['#14202b','#182630','#1e2c35','#24323a','#2b393f','#334146','#3c494c','#465052']
+    : ['#a4bac1','#aec2c5','#bccacc','#c9cfc9','#d4d4c8','#ded8c6','#e4dbc5','#e8ddc4'];
   palette.forEach((color,i) => { c.fillStyle=color; c.fillRect(0,i*17,width,18); });
   // Sparse dithering softens sky bands without blurring pixel edges.
   for(let i=0;i<480;i++) {
@@ -47,45 +50,45 @@ function scenery(width, cover, clock) {
     }
     c.lineTo(width,H); c.closePath(); c.fill();
   };
-  mountain(117,21,'#b3ab95',1); mountain(128,24,'#928e7c',3); mountain(139,29,'#757768',6); mountain(153,27,'#585f54',1);
+  mountain(117,21,dark?'#41494b':'#b3ab95',1); mountain(128,24,dark?'#333d41':'#928e7c',3); mountain(139,29,dark?'#283236':'#757768',6); mountain(153,27,dark?'#1c272b':'#585f54',1);
   // Dark angular rock fragments.
   for(let i=0;i<240;i++) {
     const x=Math.floor(rand()*width), y=137+Math.floor(rand()*49);
-    c.fillStyle=rand()>.5?'#99927b66':'#404d4366'; c.fillRect(x,y,1+Math.floor(rand()*4),1+Math.floor(rand()*3));
+    c.fillStyle=rand()>.5?(dark?'#5f696466':'#99927b66'):(dark?'#121b2066':'#404d4366'); c.fillRect(x,y,1+Math.floor(rand()*4),1+Math.floor(rand()*3));
   }
   const duneY = x => Math.round(151 + 28*Math.sin((x/width)*Math.PI) - 5*x/width);
   for(let x=0;x<width;x++) {
-    const y=duneY(x); c.fillStyle='#cdbb95'; c.fillRect(x,y,1,H-y);
-    c.fillStyle='#e1d0aa'; c.fillRect(x,y,1,3);
+    const y=duneY(x); c.fillStyle=dark?'#55554e':'#cdbb95'; c.fillRect(x,y,1,H-y);
+    c.fillStyle=dark?'#72736a':'#e1d0aa'; c.fillRect(x,y,1,3);
   }
   for(let y=154;y<H;y+=3) {
-    c.fillStyle=y>205?'#9e8f6d':'#b5a27d';
+    c.fillStyle=y>205?(dark?'#373c39':'#9e8f6d'):(dark?'#444a44':'#b5a27d');
     for(let x=0;x<width;x+=2) {
       const lineY=y+Math.round(7*Math.sin(x/width*5+y*.013));
       if(lineY>duneY(x)+5 && (x+y)%7!==0) c.fillRect(x,lineY,1,1);
     }
   }
-  c.fillStyle='#f4f5e6'; c.font='7px sans-serif'; c.textAlign='center'; c.fillText(clock.date,width/2,21);
-  pixelText(c, clock.time,width/2,31,cover?5:6,'#f7fae9');
+  c.fillStyle=dark?'#bfc3ca':'#f4f5e6'; c.font='7px sans-serif'; c.textAlign='center'; c.fillText(clock.date,width/2,21);
+  pixelText(c, clock.time,width/2,31,cover?5:6,dark?'#e5e5ea':'#f7fae9');
   // Pixel signal and battery glyphs.
-  c.fillStyle='#edf5e7'; c.fillRect(width-19,12,9,1); c.fillRect(width-17,14,5,1); c.fillRect(width-15,16,1,1);
-  c.fillStyle='#eee9d1'; c.fillRect(width/2-25,H-9,50,2);
+  c.fillStyle=dark?'#c5c9ce':'#edf5e7'; c.fillRect(width-19,12,9,1); c.fillRect(width-17,14,5,1); c.fillRect(width-15,16,1,1);
+  c.fillStyle=dark?'#b9bdc4':'#eee9d1'; c.fillRect(width/2-25,H-9,50,2);
   for(let i=0;i<2;i++) {
     const x=width-17, y=H-47+i*19;
-    c.fillStyle='#eee6ce55'; c.fillRect(x-7,y-7,14,14);c.fillStyle='#fff8e4';
-    if(i===0){c.fillRect(x-2,y-4,4,3);c.fillRect(x-1,y-1,2,5);} else {c.fillRect(x-4,y-2,8,5);c.fillRect(x-2,y-4,3,2);c.fillStyle='#b9ad90';c.fillRect(x-1,y-1,2,2);}
+    c.fillStyle=dark?'#93979a38':'#eee6ce55'; c.fillRect(x-7,y-7,14,14);c.fillStyle=dark?'#d9dce1':'#fff8e4';
+    if(i===0){c.fillRect(x-2,y-4,4,3);c.fillRect(x-1,y-1,2,5);} else {c.fillRect(x-4,y-2,8,5);c.fillRect(x-2,y-4,3,2);c.fillStyle=dark?'#4b5054':'#b9ad90';c.fillRect(x-1,y-1,2,2);}
   }
   return canvas;
 }
 
-export function createPhoneTextures(language = 'zh', clock = getClockDisplay(new Date(),language)) {
-  const wallpaper = scenery(W, false, clock);
+export function createPhoneTextures(language = 'zh', clock = getClockDisplay(new Date(),language), theme = 'light') {
+  const wallpaper = scenery(W, false, clock, theme);
   const makePhone = (width, image, cover) => {
     const canvas = document.createElement('canvas');
     canvas.width = width; canvas.height = 240;
     const c = canvas.getContext('2d');
     c.imageSmoothingEnabled = false;
-    for (const [inset,radius,color] of [[0,12,'#242825'],[1,11,'#737b70'],[2,10,'#30362f']]) {
+    for (const [inset,radius,color] of [[0,12,theme==='dark'?'#111113':'#242825'],[1,11,theme==='dark'?'#48484a':'#737b70'],[2,10,theme==='dark'?'#1c1c1e':'#30362f']]) {
       c.fillStyle = color; c.beginPath();
       c.roundRect(inset,inset,width-inset*2,240-inset*2,cover?[1,radius,radius,1]:radius); c.fill();
     }
@@ -94,5 +97,5 @@ export function createPhoneTextures(language = 'zh', clock = getClockDisplay(new
     if(cover) { c.fillStyle='#131c21';c.fillRect(width-22,15,9,9);c.fillStyle='#213040';c.fillRect(width-19,18,3,3); }
     return canvas;
   };
-  return { front:makePhone(344,wallpaper,false), cover:makePhone(172,scenery(168,true,clock),true) };
+  return { front:makePhone(344,wallpaper,false), cover:makePhone(172,scenery(168,true,clock,theme),true) };
 }

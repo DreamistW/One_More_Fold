@@ -4,13 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#eeece3">
+  <meta name="color-scheme" content="light dark">
+  <script src="theme-init.js"></script>
   <title>开合之间</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%232a302e' d='M2 5h28v22H2z'/%3E%3Cpath fill='%23e89655' d='M5 8h10v16H5zm12 0h10v16H17z'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 <body>
   <main class="cabinet">
-    <div class="language-bar"><div class="language-switch" id="language-switch" role="group" aria-label="界面语言"><button type="button" id="language-zh" lang="zh-CN" aria-pressed="true">中文</button><button type="button" id="language-en" lang="en" aria-pressed="false">EN</button></div></div>
+    <div class="language-bar">
+      <div class="language-switch theme-switch" id="theme-switch" role="group" aria-label="显示模式"><button type="button" id="theme-dark" aria-pressed="false" data-i18n="themeDark">深色</button><button type="button" id="theme-light" aria-pressed="false" data-i18n="themeLight">浅色</button><button type="button" id="theme-system" aria-pressed="true" data-i18n="themeSystem">跟随系统</button></div>
+      <div class="language-switch" id="language-switch" role="group" aria-label="界面语言"><button type="button" id="language-zh" lang="zh-CN" aria-pressed="true">中文</button><button type="button" id="language-en" lang="en" aria-pressed="false">EN</button></div>
+    </div>
     <section class="game" aria-labelledby="game-title">
       <div class="intro">
         <h1 id="game-title"><span data-i18n="title">开合之间</span><span class="title-period">.</span></h1>
@@ -58,7 +64,7 @@
       </div>
 
       <div class="settings" id="settings">
-        <button class="settings-toggle" id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel"><span><span class="settings-icon" aria-hidden="true">⚙</span> <span data-i18n="settings">测试设置</span></span><span class="settings-summary"><span data-i18n="foldChanceShort">开合</span> <span id="active-probability">1</span>% · <span data-i18n="tableChanceShort">放桌</span> <span id="active-table-probability">2</span>% · <span data-i18n="drop">跌落</span> <span id="active-drop-probability">10</span>% <span class="chevron" aria-hidden="true">+</span></span></button>
+        <button class="settings-toggle" id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel"><span><span class="settings-icon" aria-hidden="true">⚙</span> <span data-i18n="settings">测试设置</span></span><span class="settings-summary"><span data-i18n="foldChanceShort">开合</span> <span id="active-probability">1</span>% · <span data-i18n="tableChanceShort">放桌</span> <span id="active-table-probability">2</span>% · <span data-i18n="drop">跌落</span> <span id="active-drop-probability">20</span>% <span class="chevron" aria-hidden="true">+</span></span></button>
         <div class="settings-panel" id="settings-panel" aria-hidden="true" inert><div class="settings-body">
         <form id="settings-form">
           <div class="settings-heading"><label for="probability" data-i18n="probabilityLabel">展开时的故障概率</label></div>
@@ -66,8 +72,8 @@
           <div class="settings-heading"><label for="table-probability" data-i18n="tableProbabilityLabel">放桌时的故障概率</label></div>
           <div class="probability-controls"><input id="table-probability-range" type="range" min="2" max="100" step="0.1" value="2" aria-label="放桌故障概率百分比"><div class="number-field"><input id="table-probability" type="number" min="2" max="100" step="0.1" required value="2"><span>%</span></div></div>
           <div class="settings-heading"><label for="drop-probability" data-i18n="dropProbabilityLabel">跌落时的故障概率</label></div>
-          <div class="probability-controls"><input id="drop-probability-range" type="range" min="10" max="100" step="0.1" value="10" aria-label="跌落故障概率百分比"><div class="number-field"><input id="drop-probability" type="number" min="10" max="100" step="0.1" required value="10"><span>%</span></div></div>
-          <div class="settings-bottom"><p id="settings-note">下一局生效。放桌最低2%，跌落最低10%。</p><button type="submit"><span data-i18n="apply">应用并重新开始</span> <span aria-hidden="true">↗</span></button></div>
+          <div class="probability-controls"><input id="drop-probability-range" type="range" min="20" max="100" step="0.1" value="20" aria-label="跌落故障概率百分比"><div class="number-field"><input id="drop-probability" type="number" min="20" max="100" step="0.1" required value="20"><span>%</span></div></div>
+          <div class="settings-bottom"><p id="settings-note">下一局生效。放桌最低2%，跌落最低20%。</p><button type="submit"><span data-i18n="apply">应用并重新开始</span> <span aria-hidden="true">↗</span></button></div>
         </form>
         <div class="physical-controls" id="physical-controls" hidden>
           <label class="physical-toggle"><input id="physical-fold" type="checkbox" disabled><span data-i18n="physicalFoldLabel">真机开合控制（实验）</span></label>

@@ -1,7 +1,7 @@
 export const DEFAULT_PROBABILITY = 0.01;
 export const MIN_TABLE_PROBABILITY = 0.02;
 export const DEFAULT_TABLE_PROBABILITY = MIN_TABLE_PROBABILITY;
-export const MIN_DROP_PROBABILITY = 0.10;
+export const MIN_DROP_PROBABILITY = 0.20;
 export const DEFAULT_DROP_PROBABILITY = MIN_DROP_PROBABILITY;
 export const DURATIONS = Object.freeze({ fold: 600, hold: 150, unfold: 600, shake: 450, place: 700, lift: 600, drop: 900, floorLift: 800 });
 

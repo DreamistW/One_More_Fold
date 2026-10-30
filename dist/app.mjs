@@ -4,9 +4,21 @@ import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.mjs';
 import { PhysicalFoldControl } from './device-posture.mjs';
 import { watchSystemClock } from './screen-clock.mjs';
 import { watchFoldableDevice } from './foldable-device.mjs';
+import { ThemeController } from './theme.mjs';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let phone;
+const themeController = new ThemeController({onChange:({preference,resolved})=>{
+  document.documentElement.dataset.theme=resolved;
+  document.documentElement.dataset.themePreference=preference;
+  document.documentElement.style.colorScheme=resolved;
+  document.querySelector('meta[name="theme-color"]').setAttribute('content',resolved==='dark'?'#000000':'#eeece3');
+  for(const mode of ['dark','light','system']) $('theme-'+mode).setAttribute('aria-pressed',String(preference===mode));
+  phone?.setTheme(resolved);
+}});
+for(const mode of ['dark','light','system']) $('theme-'+mode).addEventListener('click',()=>themeController.setPreference(mode));
+window.addEventListener('pagehide',event=>{if(!event.persisted) themeController.destroy();});
 let draftProbability = DEFAULT_PROBABILITY;
 let draftTableProbability = DEFAULT_TABLE_PROBABILITY;
 let draftDropProbability = DEFAULT_DROP_PROBABILITY;
@@ -21,7 +33,7 @@ try { preferredLanguage = localStorage.getItem(LANGUAGE_KEY); } catch { /* Priva
 if (!['zh','en'].includes(preferredLanguage)) preferredLanguage = undefined;
 const browserLanguages = () => navigator.languages?.length ? navigator.languages : [navigator.language];
 let language = chooseLanguage(preferredLanguage, browserLanguages());
-const phone = new PhoneRenderer($('phone-canvas'),language);
+phone = new PhoneRenderer($('phone-canvas'),language,themeController.snapshot.resolved);
 const stopClock = watchSystemClock(date=>phone.updateClock(date));
 window.addEventListener('pagehide',event=>{ if(!event.persisted) stopClock(); });
 
@@ -53,6 +65,7 @@ function applyLanguage(next) {
   document.title = t.title;
   for (const element of document.querySelectorAll('[data-i18n]')) element.textContent = t[element.dataset.i18n];
   $('language-switch').setAttribute('aria-label',t.languageAria);
+  $('theme-switch').setAttribute('aria-label',t.themeAria);
   $('language-zh').setAttribute('aria-pressed',String(language === 'zh'));
   $('language-en').setAttribute('aria-pressed',String(language === 'en'));
   $('probability-range').setAttribute('aria-label',t.probabilityAria);
