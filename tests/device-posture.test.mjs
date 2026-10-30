@@ -94,3 +94,14 @@ test('physical round invokes the existing game cycle and preserves scoring and f
   assert.equal(game.phase,'gameover');assert.equal(game.score,0);
   f.change('folded');f.change('continuous');assert.equal(runs.length,2);
 });
+
+test('physical folds on the table are discarded and resume only after pickup',async()=>{
+  const f=fixture(),runs=[];
+  const game=new FoldGame({probability:0,random:()=>.5,wait:async()=>{}});
+  f.control.canPlay=()=>game.phase==='ready';
+  f.control.onCycle=()=>runs.push(game.cycle());
+  await game.putDown();assert.equal(game.score,2);
+  f.change('folded');f.change('continuous');assert.equal(runs.length,0);assert.equal(game.phase,'onTable');
+  await game.pickUp();f.change('folded');f.change('continuous');await Promise.all(runs);
+  assert.equal(runs.length,1);assert.equal(game.score,3);
+});

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="320" viewBox="0 0 512 320" shape-rendering="crispEdges">
+  <defs>
+    <pattern id="grain" width="256" height="80" patternUnits="userSpaceOnUse">
+      <path d="M0 12h34v2h64v-2h52v2h76v-2h30M0 27h18v-2h46v2h70v-2h68v2h54M0 48h52v2h30v-2h60v-2h42v2h72M0 66h24v2h78v-2h90v2h64" fill="none" stroke="#6e4327" stroke-opacity=".16" stroke-width="2"/>
+      <path d="M9 18h82m30 0h96M25 37h128m26 0h59M5 57h55m18 0h151M45 74h78m42 0h80" stroke="#e5b887" stroke-opacity=".3" stroke-width="2"/>
+      <path d="M40 32h20v2h10v2h-10v2H40v-2H30v-2h10zM170 56h28v2h12v2h-12v2h-28v-2h-14v-2h14z" fill="none" stroke="#865431" stroke-opacity=".22"/>
+    </pattern>
+  </defs>
+  <path fill="#c18d60" d="M0 0h512v320H0z"/>
+  <path fill="#b98254" d="M0 80h512v80H0zM0 240h512v80H0z"/>
+  <path fill="#ca986b" d="M0 160h512v80H0z"/>
+  <path fill="url(#grain)" d="M0 0h512v320H0z"/>
+  <path stroke="#75482c" stroke-opacity=".55" stroke-width="2" d="M0 0h512M0 80h512M0 160h512M0 240h512"/>
+  <path stroke="#e3b78c" stroke-opacity=".6" stroke-width="2" d="M0 3h512M0 83h512M0 163h512M0 243h512"/>
+  <path stroke="#805338" stroke-opacity=".3" stroke-width="2" d="M356 3v75M116 83v75M440 163v75M230 243v75"/>
+</svg>

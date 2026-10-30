@@ -1,13 +1,15 @@
 export const DEFAULT_PROBABILITY = 0.01;
-export const DURATIONS = Object.freeze({ fold: 600, hold: 150, unfold: 600, shake: 450 });
+export const MIN_TABLE_PROBABILITY = 0.02;
+export const DEFAULT_TABLE_PROBABILITY = MIN_TABLE_PROBABILITY;
+export const DURATIONS = Object.freeze({ fold: 600, hold: 150, unfold: 600, shake: 450, place: 700, lift: 600 });
 
-function validateProbability(value) {
-  if (!Number.isFinite(value) || value < 0 || value > 1) throw new RangeError('概率必须介于 0 与 1 之间');
+function validateProbability(value, minimum = 0) {
+  if (!Number.isFinite(value) || value < minimum || value > 1) throw new RangeError(`概率必须介于 ${minimum} 与 1 之间`);
   return value;
 }
 
 export class FoldGame {
-  constructor({ probability = DEFAULT_PROBABILITY, random = Math.random,
+  constructor({ probability = DEFAULT_PROBABILITY, tableProbability = DEFAULT_TABLE_PROBABILITY, random = Math.random,
     wait = ms => new Promise(resolve => setTimeout(resolve, ms)),
     onChange = () => {}, durations = DURATIONS } = {}) {
     this.random = random;
@@ -15,11 +17,12 @@ export class FoldGame {
     this.onChange = onChange;
     this.durations = { ...DURATIONS, ...durations };
     this.generation = 0;
-    this.reset(probability);
+    this.reset(probability, tableProbability);
   }
 
   get snapshot() {
-    return { phase: this.phase, score: this.score, probability: this.probability };
+    return { phase: this.phase, score: this.score, probability: this.probability,
+      tableProbability: this.tableProbability, onTable: this.onTable };
   }
 
   emit(phase) {
@@ -27,15 +30,19 @@ export class FoldGame {
     this.onChange(this.snapshot);
   }
 
-  reset(probability = this.probability) {
-    this.probability = validateProbability(probability);
+  reset(probability = this.probability, tableProbability = this.tableProbability) {
+    const nextProbability = validateProbability(probability);
+    const nextTableProbability = validateProbability(tableProbability, MIN_TABLE_PROBABILITY);
+    this.probability = nextProbability;
+    this.tableProbability = nextTableProbability;
     this.generation += 1;
     this.score = 0;
+    this.onTable = false;
     this.emit('ready');
   }
 
   async cycle() {
-    if (this.phase !== 'ready') return false;
+    if (this.phase !== 'ready' || this.onTable) return false;
     const generation = this.generation;
     const pause = async (phase, duration) => {
       this.emit(phase);
@@ -55,6 +62,36 @@ export class FoldGame {
       this.score += 1;
       this.emit('ready');
     }
+    return true;
+  }
+
+  async putDown() {
+    if (this.phase !== 'ready' || this.onTable) return false;
+    const generation = this.generation;
+    this.onTable = true;
+    this.emit('placing');
+    await this.wait(this.durations.place);
+    if (generation !== this.generation) return false;
+    if (this.random() < this.tableProbability) {
+      this.emit('damaged');
+      await this.wait(this.durations.shake);
+      if (generation !== this.generation) return false;
+      this.emit('gameover');
+    } else {
+      this.score += 2;
+      this.emit('onTable');
+    }
+    return true;
+  }
+
+  async pickUp() {
+    if (this.phase !== 'onTable' || !this.onTable) return false;
+    const generation = this.generation;
+    this.onTable = false;
+    this.emit('lifting');
+    await this.wait(this.durations.lift);
+    if (generation !== this.generation) return false;
+    this.emit('ready');
     return true;
   }
 }
