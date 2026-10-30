@@ -1,6 +1,7 @@
 import { FoldGame, DEFAULT_PROBABILITY, DURATIONS } from './game.mjs';
 import { PhoneRenderer } from './phone-renderer.mjs';
 import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.mjs';
+import { PhysicalFoldControl } from './device-posture.mjs';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -8,6 +9,8 @@ let draftProbability = DEFAULT_PROBABILITY;
 let draftEdited = false;
 let previousPhase;
 let currentSnapshot;
+let physicalControl;
+let physicalState={availability:'checking',enabled:false};
 let preferredLanguage;
 try { preferredLanguage = localStorage.getItem(LANGUAGE_KEY); } catch { /* Private mode may disable storage. */ }
 if (!['zh','en'].includes(preferredLanguage)) preferredLanguage = undefined;
@@ -21,6 +24,15 @@ function renderSettingsNote() {
   $('settings-note').textContent = draftEdited ? t.draftNote(percentage) : t.settingsNote;
 }
 
+function renderPhysicalState() {
+  const s=physicalState;
+  let state=s.availability;
+  if(state === 'available') state=!s.enabled?'disabled':s.hidden?'paused':s.armed?'armed':s.posture==='folded'?'folded':'ready';
+  $('posture-status').textContent=messages[language].postureStates[state];
+  $('physical-fold').checked=s.enabled;
+  $('physical-fold').disabled=s.availability !== 'available';
+}
+
 function applyLanguage(next) {
   language = next;
   const t = messages[language];
@@ -32,6 +44,7 @@ function applyLanguage(next) {
   $('language-en').setAttribute('aria-pressed',String(language === 'en'));
   $('probability-range').setAttribute('aria-label',t.probabilityAria);
   renderSettingsNote();
+  renderPhysicalState();
   phone.setLanguage(language);
   if(currentSnapshot) render(currentSnapshot);
 }
@@ -73,6 +86,9 @@ const game = new FoldGame({onChange:render,wait:ms => {
   if(currentSnapshot.phase === 'folding' || currentSnapshot.phase === 'unfolding') return phone.finished;
   return new Promise(resolve=>setTimeout(resolve,ms));
 }});
+physicalControl=new PhysicalFoldControl({canPlay:()=>game.phase === 'ready',
+  onCycle:()=>fold(),onState:state=>{physicalState=state;renderPhysicalState();}});
+$('physical-fold').addEventListener('change',()=>physicalControl.setEnabled($('physical-fold').checked));
 
 for (const code of ['zh','en']) $('language-'+code).addEventListener('click',() => {
   preferredLanguage = code;
@@ -92,6 +108,7 @@ $('settings-toggle').addEventListener('click',() => {
 });
 
 function fold() {
+  physicalControl?.reset();
   game.durations = reducedMotion.matches ? {fold:120,hold:0,unfold:120,shake:0} : { ...DURATIONS };
   void game.cycle();
 }
@@ -107,6 +124,7 @@ document.addEventListener('keydown',event => {
 });
 
 function restart() {
+  physicalControl?.reset();
   phone.reset();
   game.reset(draftProbability);
   $('fold').focus({preventScroll:true});

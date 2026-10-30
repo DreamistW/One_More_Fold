@@ -10,7 +10,32 @@
 python serve.py
 ```
 
-浏览器打开终端输出的 Local 地址，默认 http://127.0.0.1:8000。端口占用时自动尝试下一个，最高至 8099。服务仅监听本机；按 Ctrl+C 结束。也可以使用 `npm start`。
+默认监听 `0.0.0.0:8000`，本机打开终端输出的 Local 地址，手机与电脑在同一局域网时打开 Network 地址。`0.0.0.0` 是监听地址，不是手机访问地址。端口占用时最多尝试后续99个端口，按 Ctrl+C 结束。也可以使用 `npm start`。
+
+仅限本机时运行 `python serve.py --host 127.0.0.1`；指定端口使用 `--port 8080`。局域网访问还取决于 Windows 防火墙和网络是否允许设备之间访问。
+
+## 折叠屏真机控制
+
+- 在支持的浏览器和安全上下文中自动启用姿态检测，可在「测试设置」中关闭。
+- 优先使用 `navigator.devicePosture` 的 `change` 事件；缺少该接口时，尝试标准 `device-posture` CSS 媒体查询。
+- 观察到稳定的 `continuous → folded → continuous` 后，触发与「开合」按钮相同的一轮动画；仍然只在游戏展开完成时判定一次故障并计分。
+- API 的 `folded` 通常指内屏半折／书本姿态，`continuous` 并不保证手机物理上完全展开。API 不提供铰链角度，本实现不实时追踪折叠角度，也不把旋转或窗口缩放当作折叠事件。
+- 页面初始状态、重复通知、短暂抖动、动画中、游戏结束后、页面隐藏及恢复都不会额外计分。切到外屏、锁屏或完全合拢可能暂停姿态事件；重新显示页面后需要重新做一轮半折、展开。
+- 页面会显示等待、已检测半折、不支持或需要 HTTPS 等状态；API 存在也不代表设备一定有折叠传感器。
+
+### 三星 Z Fold 7 + Chrome 测试
+
+使用支持 Device Posture API 的 Chrome（Chrome 132 起提供该接口），在内屏打开 **HTTPS** 页面，保持浏览器跨内屏显示。先从平展姿态半折并稍停，再展开。看到「已检测到半折」后展开，应触发一轮游戏。若手机系统不向浏览器上报姿态变化，仍可使用按钮。
+
+普通 `http://电脑局域网IP:8000` 可以游玩，但不是安全上下文，真机控制会提示需要 HTTPS。可部署 `dist/` 到已有 HTTPS 站点，或使用受手机信任、且覆盖访问域名／IP 的证书启动本地 HTTPS：
+
+```powershell
+python serve.py --host 0.0.0.0 --port 8443 --certfile certs/server.pem --keyfile certs/server-key.pem
+```
+
+证书与私钥需要成对提供，证书错误会停止启动，不会降级为 HTTP。项目不会自动安装证书或修改信任设置。`certs/`、证书和私钥文件已加入 `.gitignore`。
+
+相关规范：[W3C Device Posture API](https://www.w3.org/TR/device-posture/)、[Chrome 132 发布说明](https://developer.chrome.com/release-notes/132?hl=en)。
 
 ## 玩法和测试
 
@@ -30,6 +55,7 @@ python serve.py
 
 ```powershell
 node --test tests/*.test.mjs
+python -m unittest discover -s tests -p "test_*.py"
 ```
 
 受限环境若禁止测试进程派生，可在 Node.js 24 下运行 `node --test --test-isolation=none tests/*.test.mjs`。

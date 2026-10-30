@@ -99,4 +99,9 @@ html[lang="en"] .controls p { line-height: 1.7; }
 .screen-ui { inset: 1.6667% 1.1628%; transform: none; }
 @media(min-width:1100px) and (max-height:950px) { .device-scene { max-width: 510px; } }
 @media(min-width:1100px) and (max-height:800px) { .device-scene { max-width: 420px; } }
+.controls .posture-status { color: #718166; font-size: 10px; line-height: 1.7; margin-top: 8px; }
+.physical-controls { border-top: 1px dashed var(--line); padding: 16px 3px 20px; }
+.physical-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #5b6950; }
+.physical-toggle input { accent-color: #657a57; }
+.physical-controls p { margin: 9px 0 0; color: #858b7a; font-size: 10px; line-height: 1.7; }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
