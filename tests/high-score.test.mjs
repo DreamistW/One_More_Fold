@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { HighScoreStore, HIGH_SCORE_COOKIE, HIGH_SCORE_MAX_AGE, readHighScore } from '../dist/high-score.mjs';
-import { FoldGame } from '../dist/game.mjs';
+import { HighScoreStore, HIGH_SCORE_COOKIE, HIGH_SCORE_MAX_AGE, readHighScore } from '../dist/high-score.js';
+import { FoldGame } from '../dist/game.js';
 
 function cookieJar(initial = '') {
   let cookie = initial;

@@ -1,5 +1,5 @@
 // All scenery is drawn at native low resolution. CSS scales with nearest neighbours.
-import { getClockDisplay } from './screen-clock.mjs';
+import { getClockDisplay } from './screen-clock.js';
 const W = 336, H = 232;
 const digitMap = {
   '0':['111','101','101','101','111'], '1':['010','110','010','010','111'],

@@ -1,11 +1,11 @@
-import { FoldGame, DEFAULT_PROBABILITY, DEFAULT_TABLE_PROBABILITY, DEFAULT_DROP_PROBABILITY, DURATIONS } from './game.mjs';
-import { PhoneRenderer } from './phone-renderer.mjs';
-import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.mjs';
-import { PhysicalFoldControl } from './device-posture.mjs';
-import { watchSystemClock } from './screen-clock.mjs';
-import { watchFoldableDevice } from './foldable-device.mjs';
-import { ThemeController } from './theme.mjs';
-import { HighScoreStore } from './high-score.mjs';
+import { FoldGame, DEFAULT_PROBABILITY, DEFAULT_TABLE_PROBABILITY, DEFAULT_DROP_PROBABILITY, DURATIONS } from './game.js';
+import { PhoneRenderer } from './phone-renderer.js';
+import { chooseLanguage, messages, LANGUAGE_KEY } from './i18n.js';
+import { PhysicalFoldControl } from './device-posture.js';
+import { watchSystemClock } from './screen-clock.js';
+import { watchFoldableDevice } from './foldable-device.js';
+import { ThemeController } from './theme.js';
+import { HighScoreStore } from './high-score.js';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {chooseLanguage, messages} from '../dist/i18n.mjs';
+import {chooseLanguage, messages} from '../dist/i18n.js';
 
 test('saved explicit preference takes priority over browser environment',()=>{
   assert.equal(chooseLanguage('zh',['en-US']),'zh');

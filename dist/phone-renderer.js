@@ -1,6 +1,6 @@
-import { createPhoneTextures } from './pixel-art.mjs';
-import { createBlurredInnerScreen, focusBlurStrength, innerScreenMask } from './screen-focus.mjs';
-import { ScreenClock } from './screen-clock.mjs';
+import { createPhoneTextures } from './pixel-art.js';
+import { createBlurredInnerScreen, focusBlurStrength, innerScreenMask } from './screen-focus.js';
+import { ScreenClock } from './screen-clock.js';
 
 export const PHONE_WIDTH = 344, PHONE_HEIGHT = 240;
 export const RENDER_PADDING = Object.freeze({ x:32, y:40 });

@@ -32,10 +32,14 @@ class ServerTests(unittest.TestCase):
             address = f'http://127.0.0.1:{server.server_address[1]}'
             with urlopen(address + '/', timeout=5) as response:
                 self.assertEqual(response.status, 200)
-                self.assertIn(b'physical-fold', response.read())
-            with urlopen(address + '/device-posture.mjs', timeout=5) as response:
-                self.assertEqual(response.headers.get_content_type(), 'text/javascript')
-                self.assertEqual(response.headers['Cache-Control'], 'no-store')
+                html = response.read()
+                self.assertIn(b'physical-fold', html)
+                self.assertIn(b'type="module" src="app.js"', html)
+            for script in serve.STATIC_DIRECTORY.glob('*.js'):
+                with self.subTest(script=script.name):
+                    with urlopen(address + '/' + script.name, timeout=5) as response:
+                        self.assertEqual(response.headers.get_content_type(), 'text/javascript')
+                        self.assertEqual(response.headers['Cache-Control'], 'no-store')
         finally:
             server.shutdown()
             server.server_close()

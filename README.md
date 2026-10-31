@@ -61,6 +61,8 @@ python serve.py --host 127.0.0.1 --port 8080
 
 也可使用 `npm start`，按 **Ctrl+C** 停止服务。
 
+静态托管时，发布目录设为 `dist`，无需构建。
+
 ### HTTPS
 
 使用受设备信任的证书：

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createBlurredInnerScreen, focusBlurStrength, innerScreenMask} from '../dist/screen-focus.mjs';
-import {paintFoldPixels} from '../dist/phone-renderer.mjs';
+import {createBlurredInnerScreen, focusBlurStrength, innerScreenMask} from '../dist/screen-focus.js';
+import {paintFoldPixels} from '../dist/phone-renderer.js';
 
 function checkerTexture(width=344,height=240) {
   const data=new Uint8ClampedArray(width*height*4);

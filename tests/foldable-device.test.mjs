@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {isFoldableDevice,watchFoldableDevice} from '../dist/foldable-device.mjs';
+import {isFoldableDevice,watchFoldableDevice} from '../dist/foldable-device.js';
 
 function fixture() {
   const posture=Object.assign(new EventTarget(),{type:'continuous'});

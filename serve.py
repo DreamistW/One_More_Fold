@@ -10,7 +10,8 @@ import ssl
 STATIC_DIRECTORY = Path(__file__).resolve().parent / 'dist'
 
 class Handler(SimpleHTTPRequestHandler):
-    extensions_map = {**SimpleHTTPRequestHandler.extensions_map, '.mjs': 'text/javascript'}
+    extensions_map = {**SimpleHTTPRequestHandler.extensions_map,
+                      '.js': 'text/javascript', '.mjs': 'text/javascript'}
 
     def end_headers(self):
         self.send_header('Cache-Control', 'no-store')

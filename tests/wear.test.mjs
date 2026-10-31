@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { FoldGame, probabilityWithWear, WEAR_INCREMENTS } from '../dist/game.mjs';
+import { FoldGame, probabilityWithWear, WEAR_INCREMENTS } from '../dist/game.js';
 
 const immediate = async () => {};
 

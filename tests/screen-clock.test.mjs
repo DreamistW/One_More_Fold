@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {clockKey,getClockDisplay,ScreenClock,watchSystemClock} from '../dist/screen-clock.mjs';
+import {clockKey,getClockDisplay,ScreenClock,watchSystemClock} from '../dist/screen-clock.js';
 
 test('uses local 24-hour time and translates the same date for both languages',()=>{
   const date=new Date(2026,9,31,9,5,42);

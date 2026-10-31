@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {projectFoldColumn, paintFoldPixels, foldTranslation, PHONE_HEIGHT, PHONE_WIDTH, RENDER_PADDING} from '../dist/phone-renderer.mjs';
+import {projectFoldColumn, paintFoldPixels, foldTranslation, PHONE_HEIGHT, PHONE_WIDTH, RENDER_PADDING} from '../dist/phone-renderer.js';
 
 test('fully open projection maps every source column to its original pixel',()=>{
   for(let x=0;x<=PHONE_WIDTH/2;x++)assert.deepEqual(projectFoldColumn(x,0),{x,height:PHONE_HEIGHT});

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {detectPostureSource,PhysicalFoldControl} from '../dist/device-posture.mjs';
-import {FoldGame} from '../dist/game.mjs';
+import {detectPostureSource,PhysicalFoldControl} from '../dist/device-posture.js';
+import {FoldGame} from '../dist/game.js';
 
 class FakePosture extends EventTarget {
   constructor(type='continuous'){super();this.type=type;}

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {THEME_KEY,normalizeTheme,resolveTheme,ThemeController} from '../dist/theme.mjs';
+import {THEME_KEY,normalizeTheme,resolveTheme,ThemeController} from '../dist/theme.js';
 
 function fixture(saved=null,systemDark=false) {
   const values=new Map(saved===null?[]:[[THEME_KEY,saved]]);

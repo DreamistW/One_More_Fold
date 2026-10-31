@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {FoldGame,DEFAULT_TABLE_PROBABILITY,MIN_TABLE_PROBABILITY} from '../dist/game.mjs';
+import {FoldGame,DEFAULT_TABLE_PROBABILITY,MIN_TABLE_PROBABILITY} from '../dist/game.js';
 
 const immediate=async()=>{};
 function controlled({tableProbability=.02,draw=.5}={}) {
