@@ -24,7 +24,10 @@
       </div>
 
       <div class="instrument-bar">
-        <div class="score-readout"><span class="label" data-i18n="scoreLabel">当前得分</span><strong id="score">000</strong><span class="unit" data-i18n="scoreUnit">分</span></div>
+        <div class="score-panel">
+          <div class="score-readout"><span class="label" data-i18n="scoreLabel">当前得分</span><strong id="score">000</strong><span class="unit" data-i18n="scoreUnit">分</span></div>
+          <div class="best-readout"><span data-i18n="bestScore">最高分</span><strong id="best-score">0</strong></div>
+        </div>
         <div class="health"><span id="health-light" class="health-light"></span><span id="health-label">屏幕状态良好</span></div>
       </div>
 
@@ -40,6 +43,7 @@
                 <div class="result" id="result" hidden>
                   <h2><span data-i18n="resultFirst">啊哦，屏幕坏了，</span><br><span data-i18n="resultSecond">需要花￥7998才能修好……</span></h2>
                   <div class="final-score"><span data-i18n="resultLabel">本次得分</span><strong id="final-score">0</strong><span data-i18n="scoreUnit">分</span></div>
+                  <div class="result-record"><span><span data-i18n="bestScore">最高分</span> <strong id="result-best-score">0</strong></span><span class="new-record" id="new-record" data-i18n="newRecord" hidden>新纪录！</span></div>
                   <button class="replay-button" id="replay" type="button"><span aria-hidden="true">↻ &nbsp;</span><span data-i18n="replay">重玩</span></button>
                 </div>
                 <div class="damage" id="damage" hidden aria-hidden="true"><span class="black-line"></span><span class="vertical-bleed"></span><span class="green-line"></span></div>
@@ -67,11 +71,11 @@
         <button class="settings-toggle" id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-panel"><span><span class="settings-icon" aria-hidden="true">⚙</span> <span data-i18n="settings">测试设置</span></span><span class="settings-summary"><span data-i18n="foldChanceShort">开合</span> <span id="active-probability">1</span>% · <span data-i18n="tableChanceShort">放桌</span> <span id="active-table-probability">2</span>% · <span data-i18n="drop">跌落</span> <span id="active-drop-probability">20</span>% <span class="chevron" aria-hidden="true">+</span></span></button>
         <div class="settings-panel" id="settings-panel" aria-hidden="true" inert><div class="settings-body">
         <form id="settings-form">
-          <div class="settings-heading"><label for="probability" data-i18n="probabilityLabel">展开时的故障概率</label></div>
+          <div class="settings-heading"><label for="probability" data-i18n="probabilityLabel">展开时的初始故障概率</label></div>
           <div class="probability-controls"><input id="probability-range" type="range" min="0" max="100" step="0.1" value="1" aria-label="故障概率百分比"><div class="number-field"><input id="probability" type="number" min="0" max="100" step="0.1" required value="1"><span>%</span></div></div>
-          <div class="settings-heading"><label for="table-probability" data-i18n="tableProbabilityLabel">放桌时的故障概率</label></div>
+          <div class="settings-heading"><label for="table-probability" data-i18n="tableProbabilityLabel">放桌时的初始故障概率</label></div>
           <div class="probability-controls"><input id="table-probability-range" type="range" min="2" max="100" step="0.1" value="2" aria-label="放桌故障概率百分比"><div class="number-field"><input id="table-probability" type="number" min="2" max="100" step="0.1" required value="2"><span>%</span></div></div>
-          <div class="settings-heading"><label for="drop-probability" data-i18n="dropProbabilityLabel">跌落时的故障概率</label></div>
+          <div class="settings-heading"><label for="drop-probability" data-i18n="dropProbabilityLabel">跌落时的初始故障概率</label></div>
           <div class="probability-controls"><input id="drop-probability-range" type="range" min="20" max="100" step="0.1" value="20" aria-label="跌落故障概率百分比"><div class="number-field"><input id="drop-probability" type="number" min="20" max="100" step="0.1" required value="20"><span>%</span></div></div>
           <div class="settings-bottom"><p id="settings-note">下一局生效。放桌最低2%，跌落最低20%。</p><button type="submit"><span data-i18n="apply">应用并重新开始</span> <span aria-hidden="true">↗</span></button></div>
         </form>

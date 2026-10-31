@@ -5,9 +5,12 @@ import { PhysicalFoldControl } from './device-posture.mjs';
 import { watchSystemClock } from './screen-clock.mjs';
 import { watchFoldableDevice } from './foldable-device.mjs';
 import { ThemeController } from './theme.mjs';
+import { HighScoreStore } from './high-score.mjs';
 
 const $ = id => document.getElementById(id);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const highScores = new HighScoreStore();
+let isNewRecord = false;
 let phone;
 const themeController = new ThemeController({onChange:({preference,resolved})=>{
   document.documentElement.dataset.theme=resolved;
@@ -80,6 +83,9 @@ function applyLanguage(next) {
 function render({ phase, score, probability, tableProbability, onTable, dropProbability, onFloor }) {
   currentSnapshot = { phase, score, probability, tableProbability, onTable, dropProbability, onFloor };
   const t = messages[language];
+  if(phase === 'gameover' && previousPhase !== 'gameover') {
+    isNewRecord = highScores.record(score).isNewRecord;
+  }
   const folded = phase === 'folding' || phase === 'closed';
   const moving = folded || phase === 'unfolding';
   const broken = phase === 'damaged' || phase === 'gameover';
@@ -109,6 +115,9 @@ function render({ phase, score, probability, tableProbability, onTable, dropProb
   $('drop-reward').textContent = pickupFloor ? '' : '+20';
   $('score').textContent = String(score).padStart(3,'0');
   $('final-score').textContent = String(score);
+  $('best-score').textContent = String(highScores.best);
+  $('result-best-score').textContent = String(highScores.best);
+  $('new-record').hidden = phase !== 'gameover' || !isNewRecord;
   $('phase-label').textContent = t.phases[phase];
   $('health-label').textContent = broken ? t.broken : t.healthy;
   $('health-light').parentElement.classList.toggle('is-broken',broken);
@@ -122,7 +131,7 @@ function render({ phase, score, probability, tableProbability, onTable, dropProb
   else if(phase === 'onFloor') $('announcement').textContent = t.floorAnnouncement(score);
   else if(phase !== 'gameover') $('announcement').textContent = t.phases[phase];
   if(phase === 'gameover') {
-    $('announcement').textContent = t.failedAnnouncement(score);
+    $('announcement').textContent = t.failedAnnouncement(score) + (isNewRecord ? ` ${t.newRecord}` : '');
     if(previousPhase !== 'gameover') $('replay').focus({preventScroll:true});
   }
   previousPhase = phase;
@@ -195,6 +204,7 @@ document.addEventListener('keydown',event => {
 
 function restart() {
   physicalControl?.reset();
+  isNewRecord = false;
   phone.reset();
   $('stage').classList.add('is-resetting');
   game.reset(draftProbability,draftTableProbability,draftDropProbability);
